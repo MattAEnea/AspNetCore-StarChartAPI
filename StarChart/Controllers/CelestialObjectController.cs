@@ -116,6 +116,7 @@ namespace StarChart.Controllers
                 return NotFound();
             }
             _context.CelestialObjects.RemoveRange(celObjToDelete);
+            _context.SaveChanges();
             return NoContent();
         }
     }
