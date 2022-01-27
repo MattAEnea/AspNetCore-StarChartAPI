@@ -40,7 +40,7 @@ namespace StarChart.Controllers
         {
             List<CelestialObject> celObjList = _context.CelestialObjects.ToList();
             List<CelestialObject> celObjNames = celObjList.Where(o => o.Name == name).ToList();
-            if (celObjList.Count == 0)
+            if (celObjNames.Count == 0)
             {
                 return NotFound();
             }
