@@ -67,5 +67,56 @@ namespace StarChart.Controllers
             return Ok(celObjList);
         }
 
+        [HttpPost]
+        public IActionResult Create([FromBody]CelestialObject celObj)
+        {
+            _context.CelestialObjects.Add(celObj);
+            _context.SaveChanges();
+            return CreatedAtRoute("GetById", new { id = celObj.Id }, celObj);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, CelestialObject newCelObj)
+        {
+            List<CelestialObject> celObjList = _context.CelestialObjects.ToList();
+            CelestialObject celObj = celObjList.FirstOrDefault(o => o.Id == id);
+            if (celObjList.Count == 0 || celObj == null)
+            {
+                return NotFound();
+            }
+            celObj.Name = newCelObj.Name;
+            celObj.OrbitalPeriod = newCelObj.OrbitalPeriod;
+            celObj.OrbitedObjectId = newCelObj.OrbitedObjectId;
+            _context.CelestialObjects.Update(celObj);
+            return NoContent();
+        }
+
+        [HttpPatch("{id}/{name}")]
+        public IActionResult RenameObject(int id, string name)
+        {
+            List<CelestialObject> celObjList = _context.CelestialObjects.ToList();
+            CelestialObject celObj = celObjList.FirstOrDefault(o => o.Id == id);
+            if (celObjList.Count == 0 || celObj == null)
+            {
+                return NotFound();
+            }
+            celObj.Name = name;
+            _context.CelestialObjects.Update(celObj);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            List<CelestialObject> celObjList = _context.CelestialObjects.ToList();
+            List<CelestialObject> celObjToDelete = celObjList.Where(o => o.Id == id).ToList();
+            celObjToDelete.AddRange(celObjList.Where(o => o.OrbitedObjectId == id).ToList());
+            if (celObjToDelete.Count == 0)
+            {
+                return NotFound();
+            }
+            _context.CelestialObjects.RemoveRange(celObjToDelete);
+            return NoContent();
+        }
     }
 }
