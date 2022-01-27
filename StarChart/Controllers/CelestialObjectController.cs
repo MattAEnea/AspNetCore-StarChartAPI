@@ -30,7 +30,7 @@ namespace StarChart.Controllers
             }
             foreach (CelestialObject co in celObjList)
             {
-                if(co.OrbitedObjectId == id) celObj.Satellites.Add(co);
+                celObj.Satellites = celObjList.Where(o => o.OrbitedObjectId == id).ToList();
             }
             return Ok(celObj);
         }
@@ -46,7 +46,7 @@ namespace StarChart.Controllers
             }
             foreach (CelestialObject co in celObjList)
             {
-                if (co.OrbitedObjectId == celObj.Id) celObj.Satellites.Add(co);
+                celObj.Satellites = celObjList.Where(o => o.OrbitedObjectId == celObj.Id).ToList();
             }
             return Ok(celObj);
         }
@@ -59,19 +59,11 @@ namespace StarChart.Controllers
             {
                 return NotFound();
             }
-            for (int i = 0; i < celObjList.Count; i++)
+            foreach (CelestialObject celObj in celObjList)
             {
-                for(int j = 0; j < celObjList.Count; i++)
-                {
-                    if (celObjList[i] != null && celObjList[j] != null)
-                    {
-                        if (celObjList[i].Id == celObjList[j].OrbitedObjectId)
-                        {
-                            celObjList[i].Satellites.Add(celObjList[j]);
-                        }
-                    }
-                }    
+                celObj.Satellites = celObjList.Where(o => o.OrbitedObjectId == celObj.Id).ToList();
             }
+
             return Ok(celObjList);
         }
 
